@@ -1,6 +1,6 @@
 [![Actions Status](https://github.com/perl-actions/install-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-cpanm/actions)
 
-# install-cpm
+# install-cpanm
 
 GitHub action to install App::cpanminus
 
