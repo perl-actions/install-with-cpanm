@@ -1,22 +1,22 @@
 {
-  "name": "install-cpm",
+  "name": "install-cpanm",
   "version": "1.0.0",
-  "description": "GitHub action to install App::cpm",
+  "description": "[![Actions Status](https://github.com/perl-actions/install-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-cpanm/actions)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/perl-actions/install-cpm.git"
+    "url": "git+https://github.com/perl-actions/install-cpanm.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/perl-actions/install-cpm/issues"
+    "url": "https://github.com/perl-actions/install-cpanm/issues"
   },
-  "homepage": "https://github.com/perl-actions/install-cpm#readme",
+  "homepage": "https://github.com/perl-actions/install-cpanm#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
     "@actions/exec": "^1.0.3",
