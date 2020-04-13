@@ -4,7 +4,7 @@
 
 GitHub action to install App::cpanminus
 
-This action installs 'cpnaminus' as root so you can then use it in your workflow.
+This action installs 'cpanminus' as root so you can then use it in your workflow.
 
 ## Inputs
 
