@@ -3,12 +3,158 @@ name: check
 on: [push]
 
 jobs:
-  testing:
+  cpanm:
     runs-on: ubuntu-latest
-    name: Testing GitHub action
+    name: "install cpanm"
     steps:
       - uses: actions/checkout@v2
       - name: uses install-with-cpanm
         uses: ./
       - name: which cpanm
         run: which cpanm
+
+  ### ------------------------------------------------
+  ### Install a single module
+  ### ------------------------------------------------
+
+  one_module:
+    runs-on: ubuntu-latest
+    name: "cpanm and a module"
+    steps:
+      - uses: actions/checkout@v2
+      - name: uses install-with-cpanm
+        uses: ./
+        with:
+          install: "Simple::Accessor"
+      - run: perl -MSimple::Accessor -e1
+
+  ### ------------------------------------------------
+  ### Install multiple modules
+  ### ------------------------------------------------
+
+  multiple_modules:
+    runs-on: ubuntu-latest
+    name: "cpanm & modules"
+    steps:
+      - uses: actions/checkout@v2
+      - name: uses install-with-cpanm
+        uses: ./
+        with:
+          install: |
+            Simple::Accessor
+            abbreviation
+      - run: perl -MSimple::Accessor -e1
+      - run: perl -Mabbreviation -e1
+
+  ### ------------------------------------------------
+  ### Install modules from a cpanfile
+  ### ------------------------------------------------
+
+  cpanfile_root:
+    runs-on: ubuntu-latest
+    name: "cpanfile as root"
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Create a cpanfile"
+        run: |
+          echo "requires 'Simple::Accessor';" > cpanfile.test
+      - name: uses install-with-cpanm
+        uses: ./
+        with:
+          cpanfile: "cpanfile.test"
+      - run: perl -MSimple::Accessor -e1
+
+  cpanfile_nonroot:
+    runs-on: ubuntu-latest
+    name: "cpanfile nonroot local::lib"
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Create a cpanfile"
+        run: |
+          echo "requires 'Simple::Accessor';" > cpanfile.test
+      - name: uses install-with-cpanm
+        uses: ./
+        with:
+          path: "cpanm-local"
+          cpanfile: "cpanfile.test"
+          sudo: false
+          args: "-L vendor"
+      - run: sudo perl cpanm-local local::lib
+      - run: perl -Mlocal::lib=--no-create,vendor -MSimple::Accessor -e1
+
+  ### ------------------------------------------------
+  ### Install a module and enable tests
+  ### ------------------------------------------------
+
+  with_tests:
+    runs-on: ubuntu-latest
+    name: "install with tests"
+    steps:
+      - uses: actions/checkout@v2
+      - name: uses install-with-cpanm
+        uses: ./
+        with:
+          install: "Simple::Accessor"
+          tests: true
+          args: "-v"
+      - run: perl -MSimple::Accessor -e1
+
+  ### ------------------------------------------------
+  ### check perl-tester
+  ### ------------------------------------------------
+
+  perl_tester:
+    runs-on: ubuntu-latest
+    name: "perl v${{ matrix.perl-version }}"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        perl-version:
+          - "5.30"
+          - "5.28"
+          # ...
+
+    container:
+      image: perldocker/perl-tester:${{ matrix.perl-version }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: uses install-with-cpanm
+        uses: ./
+        with:
+          sudo: false
+          install: |
+            abbreviation
+            ACH
+      # checking that both modules are installed
+      - run: perl -Mabbreviation -e1
+      - run: perl -MACH -e1
+
+  ## ------------------------------------------------
+  ## testing with windows
+  ## ------------------------------------------------
+  windows:
+    runs-on: windows-latest
+    name: "windows"
+
+    steps:
+      - name: Set up Perl
+        run: |
+          choco install strawberryperl
+          echo "##[add-path]C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin"
+
+      - name: perl -V
+        run: perl -V
+
+      - uses: actions/checkout@v2
+      - name: "install-with-cpanm"
+
+        uses: ./
+        with:
+          install: |
+            abbreviation
+            ACH
+      # checking that both modules are installed
+      - run: perl -Mabbreviation -e1
+      - run: perl -MACH -e1

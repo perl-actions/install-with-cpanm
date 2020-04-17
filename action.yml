@@ -1,8 +1,42 @@
-name: "install cpanm"
-description: "install App::cpanminus"
+name: "install with cpanm"
+description: "install Perl Modules with App::cpanminus"
 branding:
   icon: "arrow-right"
   color: "blue"
+
+inputs:
+  install:
+    description: "List of modules or distributions to install [seperated by newline]"
+    required: false
+
+  cpanfile:
+    description: "Use a cpanfile to install modules"
+    required: false
+
+  tests:
+    description: "Run or not the unit tests"
+    required: false
+    default: false
+
+  args:
+    description: "Extra args used passed to install command"
+    required: false
+
+  sudo:
+    description: "Perform installations as root"
+    required: false
+    default: true
+
+  perl:
+    description: "Path of perl to use default to current PATH"
+    required: false
+    default: "perl"
+
+  path:
+    description: "Path where to install cpanm: the string can use $Config values"
+    required: false
+    default: "$Config{installsitescript}/cpanm"
+
 runs:
   using: "node12"
   main: "index.js"
