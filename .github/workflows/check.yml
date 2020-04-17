@@ -7,7 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Testing GitHub action
     steps:
-      - name: install-with-cpanm
-        uses: perl-actions/install-with-cpanm@master
+      - uses: actions/checkout@v2
+      - name: uses install-with-cpanm
+        uses: ./
       - name: which cpanm
         run: which cpanm
