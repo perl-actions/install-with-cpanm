@@ -1,8 +1,8 @@
-name: 'install cpanm'
-description: 'install App::cpanminus'
+name: "install cpanm"
+description: "install App::cpanminus"
 branding:
-  icon: 'arrow-right'
-  color: 'blue'
+  icon: "arrow-right"
+  color: "blue"
 runs:
-  using: 'node12'
-  main: 'index.js'
+  using: "node12"
+  main: "index.js"
