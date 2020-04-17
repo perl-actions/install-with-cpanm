@@ -1,8 +1,8 @@
-[![Actions Status](https://github.com/perl-actions/install-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-cpanm/actions)
+[![Actions Status](https://github.com/perl-actions/install-with-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions)
 
-# install-cpanm
+# install-with-cpanm
 
-GitHub action to install App::cpanminus
+GitHub action to install Perl Modules App::cpanminus
 
 This action installs 'cpanminus' as root so you can then use it in your workflow.
 
@@ -17,7 +17,7 @@ none
 ## Example usage
 
 ```
-uses: perl-actions/install-cpanm@v1.0
+uses: perl-actions/install-with-cpanm@v1.0
 run: |
    sudo cpanm Module::To::Install
 ```
