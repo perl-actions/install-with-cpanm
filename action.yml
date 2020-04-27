@@ -16,7 +16,7 @@ inputs:
   tests:
     description: "Run or not the unit tests"
     required: false
-    default: false
+    default: true
 
   args:
     description: "Extra args used passed to install command"
