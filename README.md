@@ -8,7 +8,7 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 
 ```yaml
 - name: install cpanm and multiple modules
-  uses: perl-actions/install-with-cpanm@v1.1
+  uses: perl-actions/install-with-cpanm@stable
   with:
     install: |
       Simple::Accessor
@@ -53,7 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: uses install-with-cpm
-        uses: perl-actions/install-with-cpanm@v1.1
+        uses: perl-actions/install-with-cpanm@stable
         with:
           cpanfile: "cpanfile"
           sudo: false
@@ -109,7 +109,7 @@ none
 ### Install cpanm and use it manually later
 
 ```yaml
-uses: perl-actions/install-with-cpanm@v1.1
+uses: perl-actions/install-with-cpanm@stable
 # you can then use it later
 run: sudo cpanm Module::To::Install
 ```
@@ -120,7 +120,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and one module
-  uses: perl-actions/install-with-cpanm@v1.1
+  uses: perl-actions/install-with-cpanm@stable
   with:
     install: "Simple::Accessor"
 ```
@@ -129,7 +129,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and one module
-  uses: perl-actions/install-with-cpanm@v1.1
+  uses: perl-actions/install-with-cpanm@stable
   with:
     install: |
       Simple::Accessor
@@ -140,7 +140,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and files from cpanfile
-  uses: perl-actions/install-with-cpanm@v1.1
+  uses: perl-actions/install-with-cpanm@stable
   with:
     cpanfile: "your-cpanfile"
 ```
@@ -151,7 +151,7 @@ Install modules with tests.
 
 ```yaml
 - name: install cpm and files from cpanfile
-  uses: perl-actions/install-with-cpanm@v1.1
+  uses: perl-actions/install-with-cpanm@stable
   with:
     install: "Simple::Accessor"
     tests: true
@@ -177,7 +177,7 @@ windows:
 
     - uses: actions/checkout@v2
     - name: "install-with-cpanm"
-      uses: perl-actions/install-with-cpm@v1.1
+      uses: perl-actions/install-with-cpm@stable
       with:
         install: |
           abbreviation
