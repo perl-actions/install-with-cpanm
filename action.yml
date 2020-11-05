@@ -18,6 +18,11 @@ inputs:
     required: false
     default: false
 
+  verbose:
+    description: "Add -v to cpanm"
+    required: false
+    default: false
+
   args:
     description: "Extra args used passed to install command"
     required: false
