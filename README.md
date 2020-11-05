@@ -78,12 +78,17 @@ Possible values: true | false [default: false]
 
 ### `args`
 
-Extra arguments to pass to the cpanm command line.
+Extra arguments to pass to the cpanm command line used by `install` or `cpanfile`.
 
 example:
-
 ```yaml
 args: "-L vendor"
+```
+
+You can also use this option to run your own flavor
+without the need of setting `install` or `cpanfile`.
+```yaml
+args: "--installdeps ."
 ```
 
 ### `sudo`
