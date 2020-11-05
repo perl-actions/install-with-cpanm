@@ -52,7 +52,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: uses install-with-cpm
+      - name: uses install-with-cpanm
         uses: perl-actions/install-with-cpanm@v1.1
         with:
           cpanfile: "cpanfile"
@@ -150,14 +150,14 @@ but you should prefer let the action install your modules
 Install modules with tests.
 
 ```yaml
-- name: install cpm and files from cpanfile
+- name: install cpanm and files from cpanfile
   uses: perl-actions/install-with-cpanm@v1.1
   with:
     install: "Simple::Accessor"
     tests: true
 ```
 
-### Using install-with-cpm on Windows / win32
+### Using install-with-cpanm on Windows / win32
 
 Here is a sample job using cpanm to install modules on windows.
 
@@ -177,7 +177,7 @@ windows:
 
     - uses: actions/checkout@v2
     - name: "install-with-cpanm"
-      uses: perl-actions/install-with-cpm@v1.1
+      uses: perl-actions/install-with-cpanm@v1.1
       with:
         install: |
           abbreviation
