@@ -121,6 +121,8 @@ async function run() {
     CMD_install = CMD_install.concat(w_args);
   }
 
+  var has_run = false;
+
   /* install one ore more modules */
   if (install !== null && install.length) {
     // install one or more modules
@@ -130,6 +132,7 @@ async function run() {
     var cmd = [...CMD_install]; /* clone array */
     cmd = cmd.concat(list);
 
+    has_run = true;
     await do_exec(cmd);
   }
 
@@ -142,6 +145,16 @@ async function run() {
 
     var cmd = [...CMD_install];
     cmd.push("--cpanfile", cpanfile_full_path, "--installdeps", ".");
+
+    has_run = true;
+    await do_exec(cmd);
+  }
+
+  /* custom run with args */
+  if ( has_run === false && w_args.length ) {
+    console.log(`custom run with args`);
+    var cmd = [...CMD_install];
+    has_run = true;
     await do_exec(cmd);
   }
 
