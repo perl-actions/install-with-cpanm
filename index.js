@@ -97,6 +97,7 @@ async function run() {
   const tests = core.getInput("tests");
   const dash_g = core.getInput("global");
   const args = core.getInput("args");
+  const verbose = core.getInput("verbose");
 
   const w_tests = is_true(tests) ? null : "--notest";
   var w_args = [];
@@ -106,7 +107,12 @@ async function run() {
   }
 
   /* base CMD_install command */
-  var CMD_install = [PERL, cpanm_location, "-v"];
+  var CMD_install = [PERL, cpanm_location];
+
+  if (is_true(verbose)) {
+    CMD_install.push("-v");
+  }
+
   if (w_tests != null) {
     CMD_install.push(w_tests);
   }

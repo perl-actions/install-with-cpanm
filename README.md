@@ -76,6 +76,14 @@ Install modules from a cpanfile.
 Boolean variable used to disable unit tests during installation
 Possible values: true | false [default: false]
 
+### `verbose`
+
+Boolean variable used to control the `-v` flag
+Possible values: true | false [default: false]
+
+Note: this was previously set to true by default,
+this is now disabled to speedup installations.
+
 ### `args`
 
 Extra arguments to pass to the cpanm command line.
