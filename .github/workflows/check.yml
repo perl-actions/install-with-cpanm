@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'install cpanm'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: uses install-with-cpanm
         uses: ./
       - name: which cpanm
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'cpanm and a module'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: uses install-with-cpanm
         uses: ./
         with:
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'cpanm & modules'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: uses install-with-cpanm
         uses: ./
         with:
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'cpanfile as root'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: 'Create a cpanfile'
         run: |
           echo "requires 'Simple::Accessor';" > cpanfile.test
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'cpanfile nonroot local::lib'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: 'Create a cpanfile'
         run: |
           echo "requires 'Simple::Accessor';" > cpanfile.test
@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'install with tests'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: uses install-with-cpanm
         uses: ./
         with:
@@ -120,7 +120,7 @@ jobs:
       image: perldocker/perl-tester:${{ matrix.perl-version }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: uses install-with-cpanm
         uses: ./
         with:
@@ -143,7 +143,7 @@ jobs:
       - name: perl -V
         run: perl -V
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: 'install-with-cpanm'
 
         uses: ./
