@@ -51,7 +51,7 @@ jobs:
       image: perldocker/perl-tester:${{ matrix.perl-version }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: uses install-with-cpanm
         uses: perl-actions/install-with-cpanm@stable
         with:
@@ -188,7 +188,7 @@ windows:
     - name: perl -V
       run: perl -V
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: "install-with-cpanm"
       uses: perl-actions/install-with-cpanm@stable
       with:
