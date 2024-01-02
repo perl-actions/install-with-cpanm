@@ -30,12 +30,12 @@ async function install_cpanm_location() {
 async function install_cpanm(install_to) {
   const url = "https://cpanmin.us";
 
-  core.setOutput(`Get cpanm from ${url}`);
+  core.info(`Get cpanm from ${url}`);
 
   const cpanmScript = await tc.downloadTool(url);
 
-  core.setOutput("cpanm", cpanmScript);
-  console.log(`install_to ${install_to}`);
+  core.info(`cpanm Script: ${cpanmScript}`);
+  core.info(`install_to ${install_to}`);
 
   const platform = os.platform();
 
@@ -79,7 +79,7 @@ async function do_exec(cmd) {
   const platform = os.platform();
   const bin = sudo && platform != "win32" ? "sudo" : cmd.shift();
 
-  console.log(`do_exec: ${bin}`);
+  core.info(`do_exec: ${bin}`);
 
   await exec.exec(bin, cmd);
 }
@@ -126,7 +126,7 @@ async function run() {
   /* install one ore more modules */
   if (install !== null && install.length) {
     // install one or more modules
-    console.log(`install: ${install}!`);
+    core.info(`install: ${install}!`);
     const list = install.split("\n");
 
     var cmd = [...CMD_install]; /* clone array */
@@ -139,9 +139,9 @@ async function run() {
   /* install from cpanfile */
   if (cpanfile !== null && cpanfile.length) {
     // install one or more modules
-    console.log(`cpanfile: ${cpanfile}!`);
+    core.info(`cpanfile: ${cpanfile}!`);
     const cpanfile_full_path = path.resolve(cpanfile);
-    console.log(`cpanfile: ${cpanfile_full_path}! [resolved]`);
+    core.info(`cpanfile: ${cpanfile_full_path}! [resolved]`);
 
     var cmd = [...CMD_install];
     cmd.push("--cpanfile", cpanfile_full_path, "--installdeps", ".");
@@ -152,7 +152,7 @@ async function run() {
 
   /* custom run with args */
   if ( has_run === false && w_args.length ) {
-    console.log(`custom run with args`);
+    core.info(`custom run with args`);
     var cmd = [...CMD_install];
     has_run = true;
     await do_exec(cmd);
