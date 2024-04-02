@@ -1,5 +1,4 @@
 const core = require("@actions/core");
-const github = require("@actions/github");
 const tc = require("@actions/tool-cache");
 const exec = require("@actions/exec");
 const io = require("@actions/io");
@@ -91,7 +90,6 @@ async function run() {
   const install = core.getInput("install");
   const cpanfile = core.getInput("cpanfile");
   const tests = core.getInput("tests");
-  const dash_g = core.getInput("global");
   const args = core.getInput("args");
   const verbose = core.getInput("verbose");
 
