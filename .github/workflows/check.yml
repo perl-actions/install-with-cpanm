@@ -158,3 +158,18 @@ jobs:
       # checking that both modules are installed
       - run: perl -Mabbreviation -e1
       - run: perl -MACH -e1
+
+  ## ------------------------------------------------
+  ## test with local-lib
+  ## ------------------------------------------------
+  local_lib:
+    runs-on: ubuntu-latest
+    name: 'local-lib'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'install-with-cpanm'
+        uses: ./
+        with:
+          install: 'Simple::Accessor'
+          local-lib: '~/perl5'
