@@ -30538,14 +30538,14 @@ function is_true(b) {
   return false;
 }
 
-async function do_exec(cmd) {
+async function do_exec(cmd, env) {
   const sudo = is_true(core.getInput("sudo"));
   const platform = os.platform();
   const bin = sudo && platform != "win32" ? "sudo" : cmd.shift();
 
-  core.info(`do_exec: ${bin}`);
+  core.info(`do_exec: ${bin} ${env}`);
 
-  await exec.exec(bin, cmd);
+  await exec.exec(bin, cmd, env);
 }
 
 async function run() {
@@ -30561,12 +30561,25 @@ async function run() {
   const tests = core.getInput("tests");
   const args = core.getInput("args");
   const verbose = core.getInput("verbose");
+  const local_lib = core.getInput("local-lib");
 
   const w_tests = is_true(tests) ? null : "--notest";
   var w_args = [];
-
+  var env = {};
   if (args !== null && args.length) {
     w_args = args.split(/\s+/);
+  }
+
+  if (local_lib !== null && local_lib.length) {
+
+    w_args.push("--local-lib", local_lib);
+    if ( local_lib.startsWith("~") ) {
+      const home = process.env.HOME;
+      const expanded_lib_path = local_lib.replace(/^~/, home);
+      env = { PERL5LIB: expanded_lib_path };
+      } else {
+        env = { PERL5LIB: local_lib };
+      }
   }
 
   /* base CMD_install command */
@@ -30596,7 +30609,7 @@ async function run() {
     cmd = cmd.concat(list);
 
     has_run = true;
-    await do_exec(cmd);
+    await do_exec(cmd, env);
   }
 
   /* install from cpanfile */
@@ -30610,7 +30623,7 @@ async function run() {
     cmd.push("--cpanfile", cpanfile_full_path, "--installdeps", ".");
 
     has_run = true;
-    await do_exec(cmd);
+    await do_exec(cmd, env);
   }
 
   /* custom run with args */
@@ -30618,7 +30631,7 @@ async function run() {
     core.info(`custom run with args`);
     var cmd = [...CMD_install];
     has_run = true;
-    await do_exec(cmd);
+    await do_exec(cmd, env);
   }
 
   return;
