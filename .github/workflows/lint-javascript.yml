@@ -1,0 +1,17 @@
+name: Lint javascript
+on:
+    push:
+        paths:
+            - '*.js'
+    pull_request:
+        paths:
+            - '*.js'
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install dependencies
+              run: npm install -g eslint
+            - name: Lint javascript
+              run: eslint index.js

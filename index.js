@@ -168,7 +168,6 @@ async function run() {
   return;
 }
 
-// Call run
 (async () => {
   try {
     await run();
