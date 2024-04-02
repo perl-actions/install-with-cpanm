@@ -30543,7 +30543,7 @@ async function do_exec(cmd, env) {
   const platform = os.platform();
   const bin = sudo && platform != "win32" ? "sudo" : cmd.shift();
 
-  core.info(`do_exec: ${bin} ${env}`);
+  core.info(`do_exec: ${JSON.stringify(bin)} ${JSON.stringify(env)}`);
 
   await exec.exec(bin, cmd, env);
 }
