@@ -30472,7 +30472,6 @@ const tc = __nccwpck_require__(7784);
 const exec = __nccwpck_require__(1514);
 const io = __nccwpck_require__(7436);
 
-const fs = __nccwpck_require__(7147);
 const path = __nccwpck_require__(1017);
 const os = __nccwpck_require__(2037);
 
@@ -30574,10 +30573,11 @@ async function run() {
 
     w_args.push("--local-lib", local_lib);
     if ( local_lib.startsWith("~") ) {
+      // eslint-disable-next-line
       const home = process.env.HOME;
       const expanded_lib_path = local_lib.replace(/^~/, home);
       env = { PERL5LIB: expanded_lib_path };
-      } else {
+    } else {
         env = { PERL5LIB: local_lib };
       }
   }
@@ -30637,7 +30637,6 @@ async function run() {
   return;
 }
 
-// Call run
 (async () => {
   try {
     await run();
