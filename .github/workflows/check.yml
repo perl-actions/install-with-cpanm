@@ -172,3 +172,4 @@ jobs:
         with:
           install: 'Simple::Accessor'
           local-lib: '~/perl5'
+          sudo: false
