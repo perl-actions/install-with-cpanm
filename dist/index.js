@@ -30476,7 +30476,7 @@ const fs = __nccwpck_require__(7147);
 const path = __nccwpck_require__(1017);
 const os = __nccwpck_require__(2037);
 
-var PERL;
+let PERL;
 
 async function install_cpanm_location() {
   let out = "";
@@ -30488,7 +30488,7 @@ async function install_cpanm_location() {
     },
   };
 
-  var p = core.getInput("path");
+  let p = core.getInput("path");
   p.replace("\\", "\\\\");
   await exec.exec(PERL, ["-MConfig", "-e", `print "${p}"`], options);
 
@@ -30564,8 +30564,8 @@ async function run() {
   const local_lib = core.getInput("local-lib");
 
   const w_tests = is_true(tests) ? null : "--notest";
-  var w_args = [];
-  var env = {};
+  let w_args = [];
+  let env = {};
   if (args !== null && args.length) {
     w_args = args.split(/\s+/);
   }
@@ -30583,7 +30583,7 @@ async function run() {
   }
 
   /* base CMD_install command */
-  var CMD_install = [PERL, cpanm_location];
+  let CMD_install = [PERL, cpanm_location];
 
   if (is_true(verbose)) {
     CMD_install.push("-v");
@@ -30597,7 +30597,7 @@ async function run() {
     CMD_install = CMD_install.concat(w_args);
   }
 
-  var has_run = false;
+  let has_run = false;
 
   /* install one ore more modules */
   if (install !== null && install.length) {
@@ -30605,7 +30605,7 @@ async function run() {
     core.info(`install: ${install}!`);
     const list = install.split("\n");
 
-    var cmd = [...CMD_install]; /* clone array */
+    let cmd = [...CMD_install]; /* clone array */
     cmd = cmd.concat(list);
 
     has_run = true;
@@ -30619,7 +30619,7 @@ async function run() {
     const cpanfile_full_path = path.resolve(cpanfile);
     core.info(`cpanfile: ${cpanfile_full_path}! [resolved]`);
 
-    var cmd = [...CMD_install];
+    let cmd = [...CMD_install];
     cmd.push("--cpanfile", cpanfile_full_path, "--installdeps", ".");
 
     has_run = true;
@@ -30629,7 +30629,7 @@ async function run() {
   /* custom run with args */
   if ( has_run === false && w_args.length ) {
     core.info(`custom run with args`);
-    var cmd = [...CMD_install];
+    let cmd = [...CMD_install];
     has_run = true;
     await do_exec(cmd, env);
   }
