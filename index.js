@@ -92,12 +92,17 @@ async function run() {
   const tests = core.getInput("tests");
   const args = core.getInput("args");
   const verbose = core.getInput("verbose");
+  const local_lib = core.getInput("local-lib");
 
   const w_tests = is_true(tests) ? null : "--notest";
   var w_args = [];
 
   if (args !== null && args.length) {
     w_args = args.split(/\s+/);
+  }
+
+  if (local_lib !== null && local_lib.length) {
+    w_args.push("--local-lib", local_lib);
   }
 
   /* base CMD_install command */
