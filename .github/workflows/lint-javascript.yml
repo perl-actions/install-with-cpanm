@@ -3,9 +3,13 @@ on:
     push:
         paths:
             - '*.js'
+            - '.github/workflows/lint-javascript.yml'
+            - '.eslintrc.js'
     pull_request:
         paths:
             - '*.js'
+            - '.github/workflows/lint-javascript.yml'
+            - '.eslintrc.js'
 jobs:
     lint:
         runs-on: ubuntu-latest
