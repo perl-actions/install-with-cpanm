@@ -1,7 +1,7 @@
 {
-  "name": "install-with-cpanm",
-  "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/JJ/install-with-cpanm/workflows/check/badge.svg)](https://github.com/JJ/install-with-cpanm/actions)",
+  "name": "install-with-cpanm-fork",
+  "version": "1.0",
+  "description": "Install Perl modules with cpanm",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
