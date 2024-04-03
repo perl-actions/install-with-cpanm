@@ -1,6 +1,10 @@
-[![Actions Status](https://github.com/perl-actions/install-with-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions)
+[![Actions Status](https://github.com/JJ/install-with-cpanm/workflows/check/badge.svg)](https://github.com/JJ/install-with-cpanm/actions)
 
 # install-with-cpanm
+
+> This is a fork of the [original
+> `perl-actions/install-with-cpanm`](https://github.com/perl-actions/install-with-cpanm/),
+> with some improvements, released under the original license
 
 GitHub action to install Perl Modules [App::cpanminus](https://github.com/miyagawa/cpanminus)
 
@@ -8,7 +12,7 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 
 ```yaml
 - name: install cpanm and multiple modules
-  uses: perl-actions/install-with-cpanm@stable
+  uses: JJ/install-with-cpanm@v1
   with:
     install: |
       Simple::Accessor
@@ -22,6 +26,8 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 #     path: "$Config{installsitescript}/cpanm"
 # which perl binary to use
 #     perl: 'perl'
+# Use a local library
+#     local-lib: ~/perl5
 ```
 
 ## Using install-with-cpanm in a GitHub workflow
@@ -53,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: uses install-with-cpanm
-        uses: perl-actions/install-with-cpanm@stable
+        uses: JJ/install-with-cpanm@v1
         with:
           cpanfile: "cpanfile"
           sudo: false
@@ -113,6 +119,11 @@ By setting PATH correctly you probably do not need to use it.
 Where to install `cpanm`. Default value is `$Config{installsitescript}/cpanm`.
 You can use any `$Config` variable in your string.
 
+### `local-lib`
+
+Local (user space) library where `cpanm` will install the distributions. Use
+this for caching, for instance.
+
 ## Outputs
 
 none
@@ -133,7 +144,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and one module
-  uses: perl-actions/install-with-cpanm@stable
+  uses: JJ/install-with-cpanm@stable
   with:
     install: "Simple::Accessor"
 ```
@@ -142,7 +153,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and one module
-  uses: perl-actions/install-with-cpanm@stable
+  uses: JJ/install-with-cpanm@stable
   with:
     install: |
       Simple::Accessor
@@ -153,7 +164,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and files from cpanfile
-  uses: perl-actions/install-with-cpanm@stable
+  uses: JJ/install-with-cpanm@stable
   with:
     cpanfile: "your-cpanfile"
 ```
@@ -164,7 +175,7 @@ Install modules with tests.
 
 ```yaml
 - name: install cpanm and files from cpanfile
-  uses: perl-actions/install-with-cpanm@stable
+  uses: JJ/install-with-cpanm@stable
   with:
     install: "Simple::Accessor"
     tests: true
@@ -190,7 +201,7 @@ windows:
 
     - uses: actions/checkout@v4
     - name: "install-with-cpanm"
-      uses: perl-actions/install-with-cpanm@stable
+      uses: JJ/install-with-cpanm@stable
       with:
         install: |
           abbreviation
@@ -199,3 +210,23 @@ windows:
     - run: perl -Mabbreviation -e1
     - run: perl -MACH -e1
 ```
+
+### Using install-with-cpanm for installation in local library
+
+```yaml
+  local_lib:
+    runs-on: ubuntu-latest
+    name: 'local-lib'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'install-with-cpanm'
+        uses: ./
+        with:
+          install: 'Simple::Accessor'
+          local-lib: '~/perl5'
+          sudo: false
+          args: '-v'
+```
+
+`-v` is for verbosity
