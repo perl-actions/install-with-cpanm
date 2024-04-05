@@ -9,7 +9,7 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 
 ```yaml
 - name: install cpanm and multiple modules
-  uses: JJ/install-with-cpanm@v1
+  uses: perl-actions/install-with-cpanm@v1
   with:
     install: |
       Simple::Accessor
