@@ -56,7 +56,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: uses install-with-cpanm
-        uses: JJ/install-with-cpanm@v1
+        uses: perl-actions/install-with-cpanm@v1
         with:
           cpanfile: "cpanfile"
           sudo: false
@@ -141,7 +141,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and one module
-  uses: JJ/install-with-cpanm@stable
+  uses: perl-actions/install-with-cpanm@stable
   with:
     install: "Simple::Accessor"
 ```
@@ -150,7 +150,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and one module
-  uses: JJ/install-with-cpanm@stable
+  uses: perl-actions/install-with-cpanm@stable
   with:
     install: |
       Simple::Accessor
@@ -161,7 +161,7 @@ but you should prefer let the action install your modules
 
 ```yaml
 - name: install cpanm and files from cpanfile
-  uses: JJ/install-with-cpanm@stable
+  uses: perl-actions/install-with-cpanm@stable
   with:
     cpanfile: "your-cpanfile"
 ```
@@ -172,7 +172,7 @@ Install modules with tests.
 
 ```yaml
 - name: install cpanm and files from cpanfile
-  uses: JJ/install-with-cpanm@stable
+  uses: perl-actions/install-with-cpanm@stable
   with:
     install: "Simple::Accessor"
     tests: true
@@ -198,7 +198,7 @@ windows:
 
     - uses: actions/checkout@v4
     - name: "install-with-cpanm"
-      uses: JJ/install-with-cpanm@stable
+      uses: perl-actions/install-with-cpanm@stable
       with:
         install: |
           abbreviation
@@ -232,7 +232,6 @@ windows:
 ## License
 
 Copyright (c) 2022-2024, Atoomic, Olaf Alders, haarg, Brian C. Arnold, mohawk2
-Copyright (c) 2024 JJ Merelo
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
