@@ -1,5 +1,5 @@
 {
-  "name": "install-with-cpanm-fork",
+  "name": "install-with-cpanm",
   "version": "1.0",
   "description": "Install Perl modules with cpanm",
   "main": "index.js",
