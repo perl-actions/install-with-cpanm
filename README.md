@@ -1,5 +1,4 @@
-[![Actions
-Status](https://github.com/perl-actions/install-with-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions) [![Lint javascript](https://github.com/perl-actions/install-with-cpanm/actions/workflows/lint-javascript.yml/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions/workflows/lint-javascript.yml)
+[![Actions Status](https://github.com/perl-actions/install-with-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions) [![Lint javascript](https://github.com/perl-actions/install-with-cpanm/actions/workflows/lint-javascript.yml/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions/workflows/lint-javascript.yml)
 
 # install-with-cpanm
 
@@ -223,7 +222,7 @@ windows:
           install: 'Simple::Accessor'
           local-lib: '~/perl5'
           sudo: false
-		  verbose: true
+          verbose: true
 ```
 
 
