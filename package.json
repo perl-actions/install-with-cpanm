@@ -4,6 +4,7 @@
   "description": "Install Perl modules with cpanm",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "ncc build index.js"
   },

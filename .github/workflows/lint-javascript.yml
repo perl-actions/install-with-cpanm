@@ -4,18 +4,20 @@ on:
         paths:
             - '*.js'
             - '.github/workflows/lint-javascript.yml'
-            - '.eslintrc.js'
+            - 'eslint.config.js'
+            - 'package*'
     pull_request:
         paths:
             - '*.js'
             - '.github/workflows/lint-javascript.yml'
-            - '.eslintrc.js'
+            - 'eslint.config.js'
+            - 'package*'
 jobs:
     lint:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - name: Install dependencies
-              run: npm install -g eslint
+              run: npm ci
             - name: Lint javascript
               run: eslint index.js
