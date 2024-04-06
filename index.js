@@ -47,7 +47,6 @@ async function install_cpanm(install_to) {
       `cp("${cpanmScript}", "${install_to}"); chmod(0755, "${install_to}")`,
     ]);
   }
-  //await ioUtil.chmod(install_to, '0755')
 
   return install_to;
 }
