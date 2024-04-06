@@ -223,10 +223,8 @@ windows:
           install: 'Simple::Accessor'
           local-lib: '~/perl5'
           sudo: false
-          args: '-v'
+		  verbose: true
 ```
-
-`-v` is for verbosity
 
 
 ## License
