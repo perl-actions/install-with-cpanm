@@ -104,7 +104,6 @@ async function run() {
 
     w_args.push("--local-lib", local_lib);
     if ( local_lib.startsWith("~") ) {
-      // eslint-disable-next-line
       const home = process.env.HOME;
       const expanded_lib_path = local_lib.replace(/^~/, home);
       env = { PERL5LIB: expanded_lib_path };
