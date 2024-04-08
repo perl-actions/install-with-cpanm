@@ -1,9 +1,10 @@
 {
   "name": "install-with-cpanm",
-  "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/perl-actions/install-with-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions)",
+  "version": "1.0",
+  "description": "Install Perl modules with cpanm",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "ncc build index.js"
   },
@@ -27,6 +28,9 @@
     "@actions/tool-cache": "^2.0.1"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.34.0"
+    "@eslint/js": "^9.0.0",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0"
   }
 }

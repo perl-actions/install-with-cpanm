@@ -1,7 +1,7 @@
-name: "install with cpanm"
+name: "install with cpanm action"
 description: "install Perl Modules with App::cpanminus"
 branding:
-  icon: "arrow-right"
+  icon: "arrow-down"
   color: "blue"
 
 inputs:
@@ -41,6 +41,10 @@ inputs:
     description: "Path where to install cpanm: the string can use $Config values"
     required: false
     default: "$Config{installsitescript}/cpanm"
+
+  local-lib:
+    description: "Path where to install modules"
+    required: false
 
 runs:
   using: "node20"

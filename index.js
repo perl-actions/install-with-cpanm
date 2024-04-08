@@ -1,14 +1,12 @@
 const core = require("@actions/core");
-const github = require("@actions/github");
 const tc = require("@actions/tool-cache");
 const exec = require("@actions/exec");
 const io = require("@actions/io");
 
-const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-var PERL;
+let PERL;
 
 async function install_cpanm_location() {
   let out = "";
@@ -20,7 +18,7 @@ async function install_cpanm_location() {
     },
   };
 
-  var p = core.getInput("path");
+  let p = core.getInput("path");
   p.replace("\\", "\\\\");
   await exec.exec(PERL, ["-MConfig", "-e", `print "${p}"`], options);
 
@@ -49,7 +47,6 @@ async function install_cpanm(install_to) {
       `cp("${cpanmScript}", "${install_to}"); chmod(0755, "${install_to}")`,
     ]);
   }
-  //await ioUtil.chmod(install_to, '0755')
 
   return install_to;
 }
@@ -70,18 +67,14 @@ function is_true(b) {
   return false;
 }
 
-function is_false(b) {
-  return is_true(b) ? false : true;
-}
-
-async function do_exec(cmd) {
+async function do_exec(cmd, env) {
   const sudo = is_true(core.getInput("sudo"));
   const platform = os.platform();
   const bin = sudo && platform != "win32" ? "sudo" : cmd.shift();
 
-  core.info(`do_exec: ${bin}`);
+  core.info(`do_exec: ${JSON.stringify(bin)} ${JSON.stringify(env)}`);
 
-  await exec.exec(bin, cmd);
+  await exec.exec(bin, cmd, env);
 }
 
 async function run() {
@@ -95,19 +88,31 @@ async function run() {
   const install = core.getInput("install");
   const cpanfile = core.getInput("cpanfile");
   const tests = core.getInput("tests");
-  const dash_g = core.getInput("global");
   const args = core.getInput("args");
   const verbose = core.getInput("verbose");
+  const local_lib = core.getInput("local-lib");
 
   const w_tests = is_true(tests) ? null : "--notest";
-  var w_args = [];
-
+  let w_args = [];
+  let env = {};
   if (args !== null && args.length) {
     w_args = args.split(/\s+/);
   }
 
+  if (local_lib !== null && local_lib.length) {
+
+    w_args.push("--local-lib", local_lib);
+    if ( local_lib.startsWith("~") ) {
+      const home = process.env.HOME;
+      const expanded_lib_path = local_lib.replace(/^~/, home);
+      env = { PERL5LIB: expanded_lib_path };
+    } else {
+        env = { PERL5LIB: local_lib };
+      }
+  }
+
   /* base CMD_install command */
-  var CMD_install = [PERL, cpanm_location];
+  let CMD_install = [PERL, cpanm_location];
 
   if (is_true(verbose)) {
     CMD_install.push("-v");
@@ -121,7 +126,7 @@ async function run() {
     CMD_install = CMD_install.concat(w_args);
   }
 
-  var has_run = false;
+  let has_run = false;
 
   /* install one ore more modules */
   if (install !== null && install.length) {
@@ -129,11 +134,11 @@ async function run() {
     core.info(`install: ${install}!`);
     const list = install.split("\n");
 
-    var cmd = [...CMD_install]; /* clone array */
+    let cmd = [...CMD_install]; /* clone array */
     cmd = cmd.concat(list);
 
     has_run = true;
-    await do_exec(cmd);
+    await do_exec(cmd, env);
   }
 
   /* install from cpanfile */
@@ -143,25 +148,24 @@ async function run() {
     const cpanfile_full_path = path.resolve(cpanfile);
     core.info(`cpanfile: ${cpanfile_full_path}! [resolved]`);
 
-    var cmd = [...CMD_install];
+    let cmd = [...CMD_install];
     cmd.push("--cpanfile", cpanfile_full_path, "--installdeps", ".");
 
     has_run = true;
-    await do_exec(cmd);
+    await do_exec(cmd, env);
   }
 
   /* custom run with args */
   if ( has_run === false && w_args.length ) {
     core.info(`custom run with args`);
-    var cmd = [...CMD_install];
+    let cmd = [...CMD_install];
     has_run = true;
-    await do_exec(cmd);
+    await do_exec(cmd, env);
   }
 
   return;
 }
 
-// Call run
 (async () => {
   try {
     await run();

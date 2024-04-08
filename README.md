@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/perl-actions/install-with-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions)
+[![Actions Status](https://github.com/perl-actions/install-with-cpanm/workflows/check/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions) [![Lint javascript](https://github.com/perl-actions/install-with-cpanm/actions/workflows/lint-javascript.yml/badge.svg)](https://github.com/perl-actions/install-with-cpanm/actions/workflows/lint-javascript.yml)
 
 # install-with-cpanm
 
@@ -8,7 +8,7 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 
 ```yaml
 - name: install cpanm and multiple modules
-  uses: perl-actions/install-with-cpanm@stable
+  uses: perl-actions/install-with-cpanm@v1
   with:
     install: |
       Simple::Accessor
@@ -22,6 +22,8 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 #     path: "$Config{installsitescript}/cpanm"
 # which perl binary to use
 #     perl: 'perl'
+# Use a local library
+#     local-lib: ~/perl5
 ```
 
 ## Using install-with-cpanm in a GitHub workflow
@@ -53,7 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: uses install-with-cpanm
-        uses: perl-actions/install-with-cpanm@stable
+        uses: perl-actions/install-with-cpanm@v1
         with:
           cpanfile: "cpanfile"
           sudo: false
@@ -112,6 +114,11 @@ By setting PATH correctly you probably do not need to use it.
 
 Where to install `cpanm`. Default value is `$Config{installsitescript}/cpanm`.
 You can use any `$Config` variable in your string.
+
+### `local-lib`
+
+Local (user space) library where `cpanm` will install the distributions. Use
+this for caching, for instance.
 
 ## Outputs
 
@@ -199,3 +206,38 @@ windows:
     - run: perl -Mabbreviation -e1
     - run: perl -MACH -e1
 ```
+
+### Using install-with-cpanm for installation in local library
+
+```yaml
+  local_lib:
+    runs-on: ubuntu-latest
+    name: 'local-lib'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: 'install-with-cpanm'
+        uses: ./
+        with:
+          install: 'Simple::Accessor'
+          local-lib: '~/perl5'
+          sudo: false
+          verbose: true
+```
+
+
+## License
+
+Copyright (c) 2022-2024, Atoomic, Olaf Alders, haarg, Brian C. Arnold, mohawk2
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
