@@ -1,4 +1,4 @@
-name: "install with cpanm action"
+name: "install with cpanminus"
 description: "install Perl Modules with App::cpanminus"
 branding:
   icon: "arrow-down"
