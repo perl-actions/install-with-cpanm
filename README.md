@@ -28,29 +28,37 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 
 ## Using install-with-cpanm in a GitHub workflow
 
-Here is a sample integration using install-with-cpanm action
+Here is a sample integration using `install-with-cpanm` action
 to test your Perl Modules using multiple Perl versions via the
-perl-tester images.
+`perl-tester` images and the action `perl-actions/perl-versions` to rely on a dynamic list of available Perl versions.
 
 ```yaml
-# .github/workflows/linux.yml
+# .github/workflows/testsuite.yml
 jobs:
+
+  perl-versions:
+    runs-on: ubuntu-latest
+    name: List Perl versions
+    outputs:
+      perl-versions: ${{ steps.action.outputs.perl-versions }}
+    steps:
+      - id: action
+        uses: perl-actions/perl-versions@v1
+        with:
+          since-perl: v5.10
+          with-devel: true
+
   perl_tester:
     runs-on: ubuntu-latest
-    name: "perl v${{ matrix.perl-version }}"
+    name: "Perl ${{ matrix.perl-version }}"
+    needs: [perl-versions]
 
     strategy:
       fail-fast: false
       matrix:
-        perl-version:
-          - "5.30"
-          - "5.28"
-          - "5.26"
-        # ...
-        # - '5.8'
+        perl-version: ${{ fromJson (needs.perl-versions.outputs.perl-versions) }}
 
-    container:
-      image: perldocker/perl-tester:${{ matrix.perl-version }}
+    container: perldocker/perl-tester:${{ matrix.perl-version }}
 
     steps:
       - uses: actions/checkout@v4
