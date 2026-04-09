@@ -1,5 +1,4 @@
 const core = require("@actions/core");
-const tc = require("@actions/tool-cache");
 const exec = require("@actions/exec");
 const io = require("@actions/io");
 
@@ -30,7 +29,8 @@ async function install_cpanm(install_to) {
 
   core.info(`Get cpanm from ${url}`);
 
-  const cpanmScript = await tc.downloadTool(url);
+  const cpanmScript = path.join(os.tmpdir(), "cpanm");
+  await exec.exec("curl", ["-sL", url, "-o", cpanmScript]);
 
   core.info(`cpanm Script: ${cpanmScript}`);
   core.info(`install_to ${install_to}`);
