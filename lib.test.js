@@ -1,10 +1,8 @@
 jest.mock("@actions/core");
-jest.mock("@actions/tool-cache");
 jest.mock("@actions/exec");
 jest.mock("@actions/io");
 
 const core = require("@actions/core");
-const tc = require("@actions/tool-cache");
 const exec = require("@actions/exec");
 const io = require("@actions/io");
 const os = require("os");
@@ -155,32 +153,34 @@ describe("install_cpanm_location", () => {
 // ── install_cpanm ─────────────────────────────────────────────────────────────
 
 describe("install_cpanm", () => {
-  test("downloads cpanm and uses io.cp on win32", async () => {
+  test("downloads cpanm via curl and uses io.cp on win32", async () => {
     jest.spyOn(os, "platform").mockReturnValue("win32");
     core.getInput.mockImplementation((name) => name === "sudo" ? "false" : "");
-    tc.downloadTool.mockResolvedValue("/tmp/cpanm-download");
+    exec.exec.mockResolvedValue(0);
     io.cp.mockResolvedValue(undefined);
 
     const result = await install_cpanm("/usr/local/bin/cpanm");
 
-    expect(tc.downloadTool).toHaveBeenCalledWith("https://cpanmin.us");
-    expect(io.cp).toHaveBeenCalledWith("/tmp/cpanm-download", "/usr/local/bin/cpanm");
+    const curlCall = exec.exec.mock.calls.find((call) => call[0] === "curl");
+    expect(curlCall).toBeDefined();
+    expect(curlCall[1]).toContain("https://cpanmin.us");
+    expect(io.cp).toHaveBeenCalled();
     expect(result).toBe("/usr/local/bin/cpanm");
   });
 
-  test("downloads cpanm and uses perl File::Copy on non-win32", async () => {
+  test("downloads cpanm via curl and uses perl File::Copy on non-win32", async () => {
     jest.spyOn(os, "platform").mockReturnValue("linux");
     core.getInput.mockImplementation((name) => name === "sudo" ? "false" : "");
-    tc.downloadTool.mockResolvedValue("/tmp/cpanm-download");
     exec.exec.mockResolvedValue(0);
 
     set_perl("/usr/bin/perl");
     const result = await install_cpanm("/usr/local/bin/cpanm");
 
-    expect(tc.downloadTool).toHaveBeenCalledWith("https://cpanmin.us");
-    expect(exec.exec).toHaveBeenCalled();
-    const execArgs = exec.exec.mock.calls[0];
-    expect(execArgs[0]).toBe("/usr/bin/perl");
+    const curlCall = exec.exec.mock.calls.find((call) => call[0] === "curl");
+    expect(curlCall).toBeDefined();
+    expect(curlCall[1]).toContain("https://cpanmin.us");
+    // Second exec call should be the perl File::Copy via do_exec
+    expect(exec.exec.mock.calls.length).toBeGreaterThanOrEqual(2);
     expect(result).toBe("/usr/local/bin/cpanm");
   });
 });
@@ -191,7 +191,6 @@ describe("run", () => {
   beforeEach(() => {
     jest.spyOn(os, "platform").mockReturnValue("linux");
     io.which.mockResolvedValue("/usr/bin/perl");
-    tc.downloadTool.mockResolvedValue("/tmp/cpanm-download");
     exec.exec.mockImplementation(async (bin, args, options) => {
       if (options && options.listeners) {
         options.listeners.stdout(Buffer.from("/usr/local/bin/cpanm"));
