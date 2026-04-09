@@ -5,7 +5,6 @@
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(2186);
-const tc = __nccwpck_require__(7784);
 const exec = __nccwpck_require__(1514);
 const io = __nccwpck_require__(7436);
 
@@ -36,7 +35,8 @@ async function install_cpanm(install_to) {
 
   core.info(`Get cpanm from ${url}`);
 
-  const cpanmScript = await tc.downloadTool(url);
+  const cpanmScript = path.join(os.tmpdir(), "cpanm");
+  await exec.exec("curl", ["-sL", url, "-o", cpanmScript]);
 
   core.info(`cpanm Script: ${cpanmScript}`);
   core.info(`install_to ${install_to}`);
