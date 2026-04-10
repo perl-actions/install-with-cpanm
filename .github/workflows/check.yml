@@ -28,6 +28,17 @@ jobs:
           install: 'Simple::Accessor'
       - run: perl -MSimple::Accessor -e1
 
+  one_module_macos:
+    runs-on: macos-latest
+    name: 'cpanm and a module (macOS)'
+    steps:
+      - uses: actions/checkout@v4
+      - name: uses install-with-cpanm
+        uses: ./
+        with:
+          install: 'Simple::Accessor'
+      - run: perl -MSimple::Accessor -e1
+
   ### ------------------------------------------------
   ### Install multiple modules
   ### ------------------------------------------------
