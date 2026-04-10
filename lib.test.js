@@ -396,8 +396,9 @@ describe("run", () => {
   });
 
   test("expands tilde in local-lib path", async () => {
-    const originalHome = process.env.HOME;
-    process.env.HOME = "/home/testuser";
+    const os = require("os");
+    const originalHomedir = os.homedir;
+    os.homedir = () => "/home/testuser";
 
     core.getInput.mockImplementation((name) => {
       const inputs = { perl: "perl", install: "Moose", sudo: "false", tests: "false", "local-lib": "~/perl5" };
@@ -410,7 +411,7 @@ describe("run", () => {
     const installCall = calls[calls.length - 1];
     expect(installCall[2]).toEqual(expect.objectContaining({ PERL5LIB: "/home/testuser/perl5" }));
 
-    process.env.HOME = originalHome;
+    os.homedir = originalHomedir;
   });
 
   test("uses sudo on linux when sudo input is true", async () => {
