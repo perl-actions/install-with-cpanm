@@ -102,13 +102,15 @@ async function run() {
   if (local_lib !== null && local_lib.length) {
 
     w_args.push("--local-lib", local_lib);
+    let resolved_lib_path;
     if ( local_lib.startsWith("~") ) {
       const home = os.homedir();
-      const expanded_lib_path = local_lib.replace(/^~/, home);
-      env = { PERL5LIB: expanded_lib_path };
+      resolved_lib_path = local_lib.replace(/^~/, home);
     } else {
-        env = { PERL5LIB: local_lib };
-      }
+      resolved_lib_path = local_lib;
+    }
+    env = { PERL5LIB: resolved_lib_path };
+    core.addPath(path.join(resolved_lib_path, "bin"));
   }
 
   /* base CMD_install command */

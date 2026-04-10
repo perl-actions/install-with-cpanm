@@ -395,6 +395,44 @@ describe("run", () => {
     expect(installCall[2]).toEqual(expect.objectContaining({ PERL5LIB: "/opt/perl5" }));
   });
 
+  test("adds local-lib bin directory to PATH via core.addPath", async () => {
+    core.getInput.mockImplementation((name) => {
+      const inputs = { perl: "perl", install: "Moose", sudo: "false", tests: "false", "local-lib": "/opt/perl5" };
+      return inputs[name] || "";
+    });
+
+    await run();
+
+    expect(core.addPath).toHaveBeenCalledWith(path.join("/opt/perl5", "bin"));
+  });
+
+  test("adds tilde-expanded local-lib bin directory to PATH", async () => {
+    const originalHome = process.env.HOME;
+    process.env.HOME = "/home/testuser";
+
+    core.getInput.mockImplementation((name) => {
+      const inputs = { perl: "perl", install: "Moose", sudo: "false", tests: "false", "local-lib": "~/perl5" };
+      return inputs[name] || "";
+    });
+
+    await run();
+
+    expect(core.addPath).toHaveBeenCalledWith(path.join("/home/testuser/perl5", "bin"));
+
+    process.env.HOME = originalHome;
+  });
+
+  test("does not call core.addPath when local-lib is empty", async () => {
+    core.getInput.mockImplementation((name) => {
+      const inputs = { perl: "perl", install: "Moose", sudo: "false", tests: "false", "local-lib": "" };
+      return inputs[name] || "";
+    });
+
+    await run();
+
+    expect(core.addPath).not.toHaveBeenCalled();
+  });
+
   test("expands tilde in local-lib path", async () => {
     const os = require("os");
     const originalHomedir = os.homedir;
