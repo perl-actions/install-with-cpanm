@@ -149,6 +149,32 @@ describe("do_exec", () => {
 
     expect(exec.exec).toHaveBeenCalledWith("sudo", ["/usr/bin/perl", "script.pl"], { PERL5LIB: "/opt/lib" });
   });
+
+  test("does not mutate the caller's cmd array", async () => {
+    jest.spyOn(os, "platform").mockReturnValue("linux");
+    core.getInput.mockImplementation((name) => name === "sudo" ? "false" : "");
+    exec.exec.mockResolvedValue(0);
+
+    const cmd = ["/usr/bin/perl", "arg1", "arg2"];
+    const originalLength = cmd.length;
+    await do_exec(cmd);
+
+    expect(cmd).toHaveLength(originalLength);
+    expect(cmd[0]).toBe("/usr/bin/perl");
+  });
+
+  test("debug log includes command args", async () => {
+    jest.spyOn(os, "platform").mockReturnValue("linux");
+    core.getInput.mockImplementation((name) => name === "sudo" ? "false" : "");
+    exec.exec.mockResolvedValue(0);
+
+    await do_exec(["/usr/bin/perl", "script.pl", "--verbose"]);
+
+    const infoCall = core.info.mock.calls.find((call) => call[0].startsWith("do_exec:"));
+    expect(infoCall).toBeDefined();
+    expect(infoCall[0]).toContain("script.pl");
+    expect(infoCall[0]).toContain("--verbose");
+  });
 });
 
 // ── install_cpanm_location ────────────────────────────────────────────────────
