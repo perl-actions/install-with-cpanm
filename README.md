@@ -8,7 +8,7 @@ This action installs 'cpanminus' then use it if needed to install some Perl Modu
 
 ```yaml
 - name: install cpanm and multiple modules
-  uses: perl-actions/install-with-cpanm@v1
+  uses: perl-actions/install-with-cpanm@v2
   with:
     install: |
       Simple::Accessor
@@ -63,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: uses install-with-cpanm
-        uses: perl-actions/install-with-cpanm@v1
+        uses: perl-actions/install-with-cpanm@v2
         with:
           cpanfile: "cpanfile"
           sudo: false
