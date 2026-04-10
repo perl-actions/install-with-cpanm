@@ -74,9 +74,11 @@ async function do_exec(cmd, env) {
   const bin = sudo && platform != "win32" ? "sudo" : first;
   const rest = sudo && platform != "win32" ? cmd : args;
 
+  const options = env ? { env: { ...process.env, ...env } } : undefined;
+
   core.info(`do_exec: ${JSON.stringify(bin)} ${JSON.stringify(rest)} ${JSON.stringify(env)}`);
 
-  await exec.exec(bin, rest, env);
+  await exec.exec(bin, rest, options);
 }
 
 async function run() {
@@ -104,15 +106,16 @@ async function run() {
   if (local_lib !== null && local_lib.length) {
 
     w_args.push("--local-lib", local_lib);
-    let resolved_lib_path;
+    let perl5lib;
     if ( local_lib.startsWith("~") ) {
       const home = os.homedir();
-      resolved_lib_path = local_lib.replace(/^~/, home);
+      perl5lib = local_lib.replace(/^~/, home);
     } else {
-      resolved_lib_path = local_lib;
+      perl5lib = local_lib;
     }
-    env = { PERL5LIB: resolved_lib_path };
-    core.addPath(path.join(resolved_lib_path, "bin"));
+    env = { PERL5LIB: perl5lib };
+    core.exportVariable("PERL5LIB", perl5lib);
+    core.addPath(path.join(perl5lib, "bin"));
   }
 
   /* base CMD_install command */
