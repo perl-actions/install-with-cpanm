@@ -128,7 +128,7 @@ describe("do_exec", () => {
     expect(exec.exec).toHaveBeenCalledWith("/usr/bin/perl", ["arg1", "arg2"], undefined);
   });
 
-  test("passes env parameter through to exec", async () => {
+  test("passes env parameter nested in options object to exec", async () => {
     jest.spyOn(os, "platform").mockReturnValue("linux");
     core.getInput.mockImplementation((name) => name === "sudo" ? "false" : "");
     exec.exec.mockResolvedValue(0);
@@ -136,10 +136,14 @@ describe("do_exec", () => {
     const env = { PERL5LIB: "/opt/lib" };
     await do_exec(["/usr/bin/perl", "script.pl"], env);
 
-    expect(exec.exec).toHaveBeenCalledWith("/usr/bin/perl", ["script.pl"], { PERL5LIB: "/opt/lib" });
+    const callOptions = exec.exec.mock.calls[0][2];
+    expect(callOptions).toHaveProperty("env");
+    expect(callOptions.env).toMatchObject({ PERL5LIB: "/opt/lib" });
+    // process.env should be merged in
+    expect(callOptions.env).toHaveProperty("PATH");
   });
 
-  test("sudo with env parameter passes env through", async () => {
+  test("sudo with env parameter passes nested env through", async () => {
     jest.spyOn(os, "platform").mockReturnValue("linux");
     core.getInput.mockImplementation((name) => name === "sudo" ? "true" : "");
     exec.exec.mockResolvedValue(0);
@@ -147,7 +151,11 @@ describe("do_exec", () => {
     const env = { PERL5LIB: "/opt/lib" };
     await do_exec(["/usr/bin/perl", "script.pl"], env);
 
-    expect(exec.exec).toHaveBeenCalledWith("sudo", ["/usr/bin/perl", "script.pl"], { PERL5LIB: "/opt/lib" });
+    expect(exec.exec.mock.calls[0][0]).toBe("sudo");
+    expect(exec.exec.mock.calls[0][1]).toEqual(["/usr/bin/perl", "script.pl"]);
+    const callOptions = exec.exec.mock.calls[0][2];
+    expect(callOptions).toHaveProperty("env");
+    expect(callOptions.env).toMatchObject({ PERL5LIB: "/opt/lib" });
   });
 
   test("does not mutate the caller's cmd array", async () => {
@@ -406,7 +414,7 @@ describe("run", () => {
     expect(installCalls).toHaveLength(0);
   });
 
-  test("sets local-lib arg and PERL5LIB env var", async () => {
+  test("sets local-lib arg and PERL5LIB env var in nested options", async () => {
     core.getInput.mockImplementation((name) => {
       const inputs = { perl: "perl", install: "Moose", sudo: "false", tests: "false", "local-lib": "/opt/perl5" };
       return inputs[name] || "";
@@ -418,7 +426,13 @@ describe("run", () => {
     const installCall = calls[calls.length - 1];
     expect(installCall[1]).toContain("--local-lib");
     expect(installCall[1]).toContain("/opt/perl5");
-    expect(installCall[2]).toEqual(expect.objectContaining({ PERL5LIB: "/opt/perl5" }));
+    // env must be nested inside options as { env: { ...process.env, PERL5LIB: ... } }
+    expect(installCall[2]).toHaveProperty("env");
+    expect(installCall[2].env).toMatchObject({ PERL5LIB: "/opt/perl5" });
+    // process.env should be merged
+    expect(installCall[2].env).toHaveProperty("PATH");
+    // PERL5LIB should be exported for subsequent steps
+    expect(core.exportVariable).toHaveBeenCalledWith("PERL5LIB", "/opt/perl5");
   });
 
   test("adds local-lib bin directory to PATH via core.addPath", async () => {
@@ -474,7 +488,9 @@ describe("run", () => {
 
     const calls = exec.exec.mock.calls;
     const installCall = calls[calls.length - 1];
-    expect(installCall[2]).toEqual(expect.objectContaining({ PERL5LIB: "/home/testuser/perl5" }));
+    expect(installCall[2]).toHaveProperty("env");
+    expect(installCall[2].env).toMatchObject({ PERL5LIB: "/home/testuser/perl5" });
+    expect(core.exportVariable).toHaveBeenCalledWith("PERL5LIB", "/home/testuser/perl5");
 
     os.homedir = originalHomedir;
   });
@@ -554,7 +570,8 @@ describe("run", () => {
     const cpanfileCall = calls.find((call) => (call[1] || []).includes("--cpanfile"));
     expect(cpanfileCall).toBeDefined();
     expect(cpanfileCall[1]).toContain("--local-lib");
-    expect(cpanfileCall[2]).toEqual(expect.objectContaining({ PERL5LIB: "/opt/perl5" }));
+    expect(cpanfileCall[2]).toHaveProperty("env");
+    expect(cpanfileCall[2].env).toMatchObject({ PERL5LIB: "/opt/perl5" });
   });
 
   test("empty local-lib does not set PERL5LIB or --local-lib", async () => {
