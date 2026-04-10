@@ -407,8 +407,9 @@ describe("run", () => {
   });
 
   test("adds tilde-expanded local-lib bin directory to PATH", async () => {
-    const originalHome = process.env.HOME;
-    process.env.HOME = "/home/testuser";
+    const os = require("os");
+    const originalHomedir = os.homedir;
+    os.homedir = () => "/home/testuser";
 
     core.getInput.mockImplementation((name) => {
       const inputs = { perl: "perl", install: "Moose", sudo: "false", tests: "false", "local-lib": "~/perl5" };
@@ -419,7 +420,7 @@ describe("run", () => {
 
     expect(core.addPath).toHaveBeenCalledWith(path.join("/home/testuser/perl5", "bin"));
 
-    process.env.HOME = originalHome;
+    os.homedir = originalHomedir;
   });
 
   test("does not call core.addPath when local-lib is empty", async () => {
