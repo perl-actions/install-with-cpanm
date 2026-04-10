@@ -76,11 +76,13 @@ function is_true(b) {
 async function do_exec(cmd, env) {
   const sudo = is_true(core.getInput("sudo"));
   const platform = os.platform();
-  const bin = sudo && platform != "win32" ? "sudo" : cmd.shift();
+  const [first, ...args] = cmd;
+  const bin = sudo && platform != "win32" ? "sudo" : first;
+  const rest = sudo && platform != "win32" ? cmd : args;
 
-  core.info(`do_exec: ${JSON.stringify(bin)} ${JSON.stringify(env)}`);
+  core.info(`do_exec: ${JSON.stringify(bin)} ${JSON.stringify(rest)} ${JSON.stringify(env)}`);
 
-  await exec.exec(bin, cmd, env);
+  await exec.exec(bin, rest, env);
 }
 
 async function run() {
