@@ -113,8 +113,16 @@ async function run() {
     } else {
       perl5lib = local_lib;
     }
-    env = { PERL5LIB: perl5lib };
+    env = {
+      PERL5LIB: perl5lib,
+      PERL_LOCAL_LIB_ROOT: perl5lib,
+      PERL_MM_OPT: `INSTALL_BASE=${perl5lib}`,
+      PERL_MB_OPT: `--install_base ${perl5lib}`,
+    };
     core.exportVariable("PERL5LIB", perl5lib);
+    core.exportVariable("PERL_LOCAL_LIB_ROOT", perl5lib);
+    core.exportVariable("PERL_MM_OPT", `INSTALL_BASE=${perl5lib}`);
+    core.exportVariable("PERL_MB_OPT", `--install_base ${perl5lib}`);
     core.addPath(path.join(perl5lib, "bin"));
   }
 
