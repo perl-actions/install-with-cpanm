@@ -36,7 +36,7 @@ async function install_cpanm(install_to) {
   core.info(`Get cpanm from ${url}`);
 
   const cpanmScript = path.join(os.tmpdir(), "cpanm");
-  await exec.exec("curl", ["-sL", url, "-o", cpanmScript]);
+  await exec.exec("curl", ["-sL", url, "-o", cpanmScript, "--retry", "3", "--retry-delay", "5"]);
 
   core.info(`cpanm Script: ${cpanmScript}`);
   core.info(`install_to ${install_to}`);

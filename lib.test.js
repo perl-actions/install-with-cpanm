@@ -183,6 +183,22 @@ describe("install_cpanm", () => {
     expect(exec.exec.mock.calls.length).toBeGreaterThanOrEqual(2);
     expect(result).toBe("/usr/local/bin/cpanm");
   });
+
+  test("curl command includes retry flags for transient failure resilience", async () => {
+    jest.spyOn(os, "platform").mockReturnValue("linux");
+    core.getInput.mockImplementation((name) => name === "sudo" ? "false" : "");
+    exec.exec.mockResolvedValue(0);
+
+    set_perl("/usr/bin/perl");
+    await install_cpanm("/usr/local/bin/cpanm");
+
+    const curlCall = exec.exec.mock.calls.find((call) => call[0] === "curl");
+    expect(curlCall).toBeDefined();
+    expect(curlCall[1]).toContain("--retry");
+    expect(curlCall[1]).toContain("3");
+    expect(curlCall[1]).toContain("--retry-delay");
+    expect(curlCall[1]).toContain("5");
+  });
 });
 
 // ── run ───────────────────────────────────────────────────────────────────────
