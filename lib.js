@@ -113,8 +113,9 @@ async function run() {
     } else {
       perl5lib = local_lib;
     }
-    env = { PERL5LIB: perl5lib };
-    core.exportVariable("PERL5LIB", perl5lib);
+    const perl5libPath = path.join(perl5lib, "lib", "perl5");
+    env = { PERL5LIB: perl5libPath };
+    core.exportVariable("PERL5LIB", perl5libPath);
     core.addPath(path.join(perl5lib, "bin"));
   }
 

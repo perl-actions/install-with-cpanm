@@ -428,11 +428,11 @@ describe("run", () => {
     expect(installCall[1]).toContain("/opt/perl5");
     // env must be nested inside options as { env: { ...process.env, PERL5LIB: ... } }
     expect(installCall[2]).toHaveProperty("env");
-    expect(installCall[2].env).toMatchObject({ PERL5LIB: "/opt/perl5" });
+    expect(installCall[2].env).toMatchObject({ PERL5LIB: path.join("/opt/perl5", "lib", "perl5") });
     // process.env should be merged
     expect(installCall[2].env).toHaveProperty("PATH");
     // PERL5LIB should be exported for subsequent steps
-    expect(core.exportVariable).toHaveBeenCalledWith("PERL5LIB", "/opt/perl5");
+    expect(core.exportVariable).toHaveBeenCalledWith("PERL5LIB", path.join("/opt/perl5", "lib", "perl5"));
   });
 
   test("adds local-lib bin directory to PATH via core.addPath", async () => {
@@ -489,8 +489,8 @@ describe("run", () => {
     const calls = exec.exec.mock.calls;
     const installCall = calls[calls.length - 1];
     expect(installCall[2]).toHaveProperty("env");
-    expect(installCall[2].env).toMatchObject({ PERL5LIB: "/home/testuser/perl5" });
-    expect(core.exportVariable).toHaveBeenCalledWith("PERL5LIB", "/home/testuser/perl5");
+    expect(installCall[2].env).toMatchObject({ PERL5LIB: path.join("/home/testuser/perl5", "lib", "perl5") });
+    expect(core.exportVariable).toHaveBeenCalledWith("PERL5LIB", path.join("/home/testuser/perl5", "lib", "perl5"));
 
     os.homedir = originalHomedir;
   });
@@ -571,7 +571,7 @@ describe("run", () => {
     expect(cpanfileCall).toBeDefined();
     expect(cpanfileCall[1]).toContain("--local-lib");
     expect(cpanfileCall[2]).toHaveProperty("env");
-    expect(cpanfileCall[2].env).toMatchObject({ PERL5LIB: "/opt/perl5" });
+    expect(cpanfileCall[2].env).toMatchObject({ PERL5LIB: path.join("/opt/perl5", "lib", "perl5") });
   });
 
   test("empty local-lib does not set PERL5LIB or --local-lib", async () => {
