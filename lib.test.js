@@ -330,6 +330,24 @@ describe("run", () => {
     expect(installCall[1]).toContain("MooseX::Types");
   });
 
+  test("filters empty and whitespace-only lines from install input", async () => {
+    core.getInput.mockImplementation((name) => {
+      const inputs = { perl: "perl", install: "Moose\n\n  \nMooseX::Types\n", sudo: "false", tests: "false" };
+      return inputs[name] || "";
+    });
+
+    await run();
+
+    const calls = exec.exec.mock.calls;
+    const installCall = calls[calls.length - 1];
+    expect(installCall[1]).toContain("Moose");
+    expect(installCall[1]).toContain("MooseX::Types");
+    // Should not contain empty strings or whitespace-only entries
+    const argsAfterCpanm = installCall[1];
+    const emptyArgs = argsAfterCpanm.filter((a) => a.trim() === "");
+    expect(emptyArgs).toHaveLength(0);
+  });
+
   test("runs tests when tests input is true", async () => {
     core.getInput.mockImplementation((name) => {
       const inputs = { perl: "perl", install: "Moose", sudo: "false", tests: "true" };
