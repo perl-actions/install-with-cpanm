@@ -166,7 +166,6 @@ async function run() {
   if ( has_run === false && w_args.length ) {
     core.info(`custom run with args`);
     let cmd = [...CMD_install];
-    has_run = true;
     await do_exec(cmd, env);
   }
 
