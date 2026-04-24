@@ -103,7 +103,16 @@ AI may assist in drafting changelogs or release notes, but these are always revi
 
 ## Attribution and Transparency
 
-Where AI has played a material role in generating code or content within a pull request, we aim to note this in the PR description (e.g. via a `Generated-By` or `AI-Assisted` label or note). We do not consider AI the author of any contribution — the maintainer who reviewed and approved the work takes responsibility for it.
+Automated commits in this repository are authored by **[Koan Bot](https://github.com/Koan-Bot)**, an AI agent operated by [@atoomic](https://github.com/atoomic) (Nicolas R.). Koan Bot proposes changes via draft pull requests; a human maintainer reviews and merges every one.
+
+Each bot-authored commit includes a `Co-authored-by` trailer identifying:
+
+1. The human maintainer who owns the change (e.g. `Co-authored-by: Nicolas R. <nicolas@atoomic.org>`)
+2. The AI model that generated the code (e.g. `Co-authored-by: Claude <noreply@anthropic.com>`)
+
+This makes the chain of responsibility explicit in the git history: the human listed in the trailer is accountable for the change, regardless of who — or what — produced the initial draft.
+
+We do not consider AI the author of any contribution — the maintainer who reviewed and approved the work takes responsibility for it.
 
 ---
 
