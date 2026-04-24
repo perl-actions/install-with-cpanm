@@ -185,3 +185,5 @@ jobs:
           local-lib: '~/perl5'
           sudo: false
           args: '-v'
+      - name: 'verify local-lib module is loadable'
+        run: perl -MSimple::Accessor -e1
